@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'com.codegym'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    compile('javax.servlet:javax.servlet-api:3.1.0')
+    compile('org.springframework:spring-webmvc:4.3.4.RELEASE')
+    compile('org.springframework:spring-orm:4.3.4.RELEASE') // Bo sung thu vien Transaction
+    compile('org.thymeleaf:thymeleaf-spring4:3.0.11.RELEASE')
+    compile('org.hibernate:hibernate-entitymanager:5.4.25.Final')
+    compile('org.hibernate:hibernate-core:5.4.25.Final')
+    compile('mysql:mysql-connector-java:8.0.22')
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.5.3'
+}
+
+test {
+    useJUnitPlatform()
+}
