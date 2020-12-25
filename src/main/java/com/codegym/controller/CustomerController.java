@@ -13,12 +13,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
+@RequestMapping("customers")
 public class CustomerController {
 
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
-    @RequestMapping(value = "/customers/", method = RequestMethod.GET)
+    @Autowired
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
+    @GetMapping
     public ResponseEntity<List<Customer>> listAllCustomers() {
         List<Customer> customers = customerService.findAll();
         if (customers.isEmpty()) {
@@ -27,7 +32,7 @@ public class CustomerController {
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/customers/", method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<Void> addCustomer(@RequestBody Customer customer, UriComponentsBuilder uriComponentsBuilder) {
         customerService.save(customer);
         HttpHeaders headers = new HttpHeaders();
@@ -35,9 +40,8 @@ public class CustomerController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/customers/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Customer> getCustomer(@PathVariable("id") Long id) {
-        System.out.println("Fetching Customer with id " + id);
         Customer customer = customerService.findById(id);
         if (customer != null) {
             return new ResponseEntity<>(customer, HttpStatus.OK);
@@ -45,9 +49,8 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "/customers/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable("id") Long id, @RequestBody Customer customer) {
-        System.out.println("Updating Customer " + id);
         Customer currentCustomer = customerService.findById(id);
         if (currentCustomer != null) {
             currentCustomer.setFirstName(customer.getFirstName());
@@ -58,7 +61,7 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "/customers/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<Customer> removeCustomer(@PathVariable("id") Long id) {
         Customer customer = customerService.findById(id);
         if (customer != null) {
